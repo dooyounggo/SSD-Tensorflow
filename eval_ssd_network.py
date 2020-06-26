@@ -44,7 +44,7 @@ DATA_FORMAT = 'NHWC'
 # SSD evaluation Flags.
 # =========================================================================== #
 tf.app.flags.DEFINE_float(
-    'select_threshold', 0.1, 'Selection threshold.')
+    'select_threshold', 0.05, 'Selection threshold.')
 tf.app.flags.DEFINE_integer(
     'select_top_k', 100, 'Select top-k detected bounding boxes.')
 tf.app.flags.DEFINE_integer(
@@ -66,7 +66,7 @@ tf.app.flags.DEFINE_boolean(
 tf.app.flags.DEFINE_integer(
     'num_classes', 21, 'Number of classes to use in the dataset.')
 tf.app.flags.DEFINE_integer(
-    'batch_size', 1, 'The number of samples in each batch.')
+    'batch_size', 4, 'The number of samples in each batch.')
 tf.app.flags.DEFINE_integer(
     'max_num_batches', None,
     'Max number of batches to evaluate by default use all.')
@@ -237,10 +237,9 @@ def main(_):
 
             bbox_images = b_image
             for i, bbox in rbboxes.items():
-                rgba = [[reds[i - 1], greens[i - 1], blues[i - 1], 1.0]]
-                rgba = tf.tile(rgba, multiples=[20, 1])
+                colors = np.array([[1.0, 0.0, 0.0], [0.0, 0.0, 1.0]])
                 bbox = tf.clip_by_value(bbox, 0.0, 1.0)
-                bbox_images = tf.image.draw_bounding_boxes(bbox_images, bbox, colors=rgba)
+                bbox_images = tf.image.draw_bounding_boxes(bbox_images, bbox, colors=colors)
             op = tf.summary.image('Images', bbox_images, collections=[], max_outputs=8)
             tf.add_to_collection(tf.GraphKeys.SUMMARIES, op)
 
