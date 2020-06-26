@@ -44,13 +44,13 @@ DATA_FORMAT = 'NHWC'
 # SSD evaluation Flags.
 # =========================================================================== #
 tf.app.flags.DEFINE_float(
-    'select_threshold', 0.05, 'Selection threshold.')
+    'select_threshold', 0.2, 'Selection threshold.')
 tf.app.flags.DEFINE_integer(
     'select_top_k', 100, 'Select top-k detected bounding boxes.')
 tf.app.flags.DEFINE_integer(
     'keep_top_k', 50, 'Keep top-k detected objects.')
 tf.app.flags.DEFINE_float(
-    'nms_threshold', 0.45, 'Non-Maximum Selection threshold.')
+    'nms_threshold', 0.4, 'Non-Maximum Selection threshold.')
 tf.app.flags.DEFINE_float(
     'matching_threshold', 0.5, 'Matching threshold with groundtruth objects.')
 tf.app.flags.DEFINE_integer(
@@ -237,9 +237,8 @@ def main(_):
 
             bbox_images = b_image
             for i, bbox in rbboxes.items():
-                colors = np.array([[1.0, 0.0, 0.0], [0.0, 0.0, 1.0]])
                 bbox = tf.clip_by_value(bbox, 0.0, 1.0)
-                bbox_images = tf.image.draw_bounding_boxes(bbox_images, bbox, colors=colors)
+                bbox_images = tf.image.draw_bounding_boxes(bbox_images, bbox, colors=None)
             op = tf.summary.image('Images', bbox_images, collections=[], max_outputs=8)
             tf.add_to_collection(tf.GraphKeys.SUMMARIES, op)
 
