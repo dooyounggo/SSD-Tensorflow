@@ -229,7 +229,7 @@ def main(_):
             reds = (class_inds + code_length - 1) // code_length * color_coeff
             greens = (class_inds + code_length - 1) // code_length * color_coeff
             blues = (class_inds + code_length - 1) // code_length * color_coeff
-            for i in range(FLAGS.num_classes):
+            for i in range(FLAGS.num_classes - 1):
                 idx = (i - 1) % code_length
                 reds[i] = reds[i] * code_r[idx]
                 greens[i] = greens[i] * code_g[idx]
