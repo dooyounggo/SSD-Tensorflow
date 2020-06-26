@@ -46,9 +46,9 @@ DATA_FORMAT = 'NHWC'
 tf.app.flags.DEFINE_float(
     'select_threshold', 0.01, 'Selection threshold.')
 tf.app.flags.DEFINE_integer(
-    'select_top_k', 400, 'Select top-k detected bounding boxes.')
+    'select_top_k', 100, 'Select top-k detected bounding boxes.')
 tf.app.flags.DEFINE_integer(
-    'keep_top_k', 200, 'Keep top-k detected objects.')
+    'keep_top_k', 50, 'Keep top-k detected objects.')
 tf.app.flags.DEFINE_float(
     'nms_threshold', 0.45, 'Non-Maximum Selection threshold.')
 tf.app.flags.DEFINE_float(
@@ -215,7 +215,34 @@ def main(_):
                                         clipping_bbox=None,
                                         top_k=FLAGS.select_top_k,
                                         keep_top_k=FLAGS.keep_top_k)
-            print_ops.append(tf.print(rbboxes[1][0][:6]))
+            # print_ops.append(tf.print(rbboxes[1][0][:6]))
+            # Bbox color generation
+            max_color = 1.0
+            code_r = [1, 0, 0, 1, 1, 0, .8, 1, .6, .6]
+            code_g = [0, 1, 0, 1, 0, 1, .8, .6, 1, .6]
+            code_b = [0, 0, 1, 0, 1, 1, .8, .6, .6, 1]
+            code_length = len(code_r)
+            color_base = (FLAGS.num_classes - 1) // code_length + 1
+            color_coeff = max_color / color_base
+
+            class_inds = np.arange(FLAGS.num_classes - 1, dtype=np.float32)
+            reds = (class_inds + code_length - 1) // code_length * color_coeff
+            greens = (class_inds + code_length - 1) // code_length * color_coeff
+            blues = (class_inds + code_length - 1) // code_length * color_coeff
+            for i in range(FLAGS.num_classes):
+                idx = (i - 1) % code_length
+                reds[i] = reds[i] * code_r[idx]
+                greens[i] = greens[i] * code_g[idx]
+                blues[i] = blues[i] * code_b[idx]
+
+            bbox_images = b_image
+            for i, bbox in rbboxes.items():
+                rgba = [[reds[i - 1], greens[i - 1], blues[i - 1], 0.75]]
+                bbox = tf.clip_by_value(bbox, 0.0, 1.0)
+                bbox_images = tf.image.draw_bounding_boxes(bbox_images, bbox, colors=rgba)
+            op = tf.summary.image('Images', bbox_images, collections=[])
+            tf.add_to_collection(tf.GraphKeys.SUMMARIES, op)
+
             # Compute TP and FP statistics.
             num_gbboxes, tp, fp, rscores = \
                 tfe.bboxes_matching_batch(rscores.keys(), rscores, rbboxes,
