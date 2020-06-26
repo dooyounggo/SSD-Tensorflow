@@ -44,7 +44,7 @@ DATA_FORMAT = 'NHWC'
 # SSD evaluation Flags.
 # =========================================================================== #
 tf.app.flags.DEFINE_float(
-    'select_threshold', 0.01, 'Selection threshold.')
+    'select_threshold', 0.1, 'Selection threshold.')
 tf.app.flags.DEFINE_integer(
     'select_top_k', 100, 'Select top-k detected bounding boxes.')
 tf.app.flags.DEFINE_integer(
@@ -237,7 +237,7 @@ def main(_):
 
             bbox_images = b_image
             for i, bbox in rbboxes.items():
-                rgba = [[reds[i - 1], greens[i - 1], blues[i - 1]]]
+                rgba = [[reds[i - 1], greens[i - 1], blues[i - 1], 1.0]]
                 bbox = tf.clip_by_value(bbox, 0.0, 1.0)
                 bbox_images = tf.image.draw_bounding_boxes(bbox_images, bbox, colors=rgba)
             op = tf.summary.image('Images', bbox_images, collections=[], max_outputs=8)
