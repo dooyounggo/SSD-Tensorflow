@@ -237,7 +237,7 @@ def main(_):
 
             bbox_images = b_image
             for i, bbox in rbboxes.items():
-                colors = [[reds[i], greens[i], blues[i], 1.0]]
+                colors = [[reds[i - 1], greens[i - 1], blues[i - 1], 1.0]]
                 bbox = tf.clip_by_value(bbox, 0.0, 1.0)
                 bbox_images = tf.image.draw_bounding_boxes(bbox_images, bbox, colors=colors)
             op = tf.summary.image('Images', tf.cast(bbox_images*255, dtype=tf.uint8), collections=[], max_outputs=8)
