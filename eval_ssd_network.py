@@ -50,7 +50,7 @@ tf.app.flags.DEFINE_integer(
 tf.app.flags.DEFINE_integer(
     'keep_top_k', 50, 'Keep top-k detected objects.')
 tf.app.flags.DEFINE_float(
-    'nms_threshold', 0.4, 'Non-Maximum Selection threshold.')
+    'nms_threshold', 0.5, 'Non-Maximum Selection threshold.')
 tf.app.flags.DEFINE_float(
     'matching_threshold', 0.5, 'Matching threshold with groundtruth objects.')
 tf.app.flags.DEFINE_integer(
@@ -58,7 +58,7 @@ tf.app.flags.DEFINE_integer(
 tf.app.flags.DEFINE_integer(
     'eval_image_size', None, 'Eval image size.')
 tf.app.flags.DEFINE_boolean(
-    'remove_difficult', True, 'Remove difficult objects from evaluation.')
+    'remove_difficult', False, 'Remove difficult objects from evaluation.')
 
 # =========================================================================== #
 # Main evaluation flags.
