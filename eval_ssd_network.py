@@ -235,12 +235,12 @@ def main(_):
                 greens[i] = greens[i] * code_g[idx]
                 blues[i] = blues[i] * code_b[idx]
 
-            bbox_images = b_image
+            bbox_images = (b_image + [123, 117, 104])/255
             for i, bbox in rbboxes.items():
                 colors = [[reds[i - 1], greens[i - 1], blues[i - 1], 1.0]]
                 bbox = tf.clip_by_value(bbox, 0.0, 1.0)
                 bbox_images = tf.image.draw_bounding_boxes(bbox_images, bbox, colors=colors)
-            op = tf.summary.image('Images', bbox_images, collections=[], max_outputs=8)
+            op = tf.summary.image('Images', tf.cast(bbox_images*255, dtype=tf.uint8), collections=[], max_outputs=8)
             tf.add_to_collection(tf.GraphKeys.SUMMARIES, op)
 
             v = tf.reduce_mean(b_image)
