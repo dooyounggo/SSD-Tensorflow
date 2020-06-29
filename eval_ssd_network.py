@@ -44,7 +44,7 @@ DATA_FORMAT = 'NHWC'
 # SSD evaluation Flags.
 # =========================================================================== #
 tf.app.flags.DEFINE_float(
-    'select_threshold', 0.2, 'Selection threshold.')
+    'select_threshold', 0.1, 'Selection threshold.')
 tf.app.flags.DEFINE_integer(
     'select_top_k', 100, 'Select top-k detected bounding boxes.')
 tf.app.flags.DEFINE_integer(
@@ -218,9 +218,9 @@ def main(_):
             # print_ops.append(tf.print(rbboxes[1][0][:6]))
             # Bbox color generation
             max_color = 1.0
-            code_r = [1, 0, 0, 1, 1, 0, .8, 1, .6, .6]
-            code_g = [0, 1, 0, 1, 0, 1, .8, .6, 1, .6]
-            code_b = [0, 0, 1, 0, 1, 1, .8, .6, .6, 1]
+            code_r = [1, 0, 0, 1, 1, 0, 1, .6, .6]
+            code_g = [0, 1, 0, 1, 0, 1, .6, 1, .6]
+            code_b = [0, 0, 1, 0, 1, 1, .6, .6, 1]
             code_length = len(code_r)
             color_base = (FLAGS.num_classes - 1) // code_length + 1
             color_coeff = max_color / color_base
