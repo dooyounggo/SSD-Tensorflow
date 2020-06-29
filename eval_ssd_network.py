@@ -240,7 +240,20 @@ def main(_):
                 colors = [[reds[i - 1], greens[i - 1], blues[i - 1], 1.0]]
                 bbox = tf.clip_by_value(bbox, 0.0, 1.0)
                 bbox_images = tf.image.draw_bounding_boxes(bbox_images, bbox, colors=colors)
-            op = tf.summary.image('Images', tf.cast(bbox_images*255, dtype=tf.uint8), collections=[], max_outputs=8)
+            op = tf.summary.image('Images', bbox_images, collections=[], max_outputs=8)
+            tf.add_to_collection(tf.GraphKeys.SUMMARIES, op)
+
+            v = tf.reduce_mean(b_image)
+            op = tf.summary.scalar('Image Mean', v, collections=[])
+            op = tf.Print(op, [v], 'Image Mean')
+            tf.add_to_collection(tf.GraphKeys.SUMMARIES, op)
+            v = tf.reduce_min(b_image)
+            op = tf.summary.scalar('Image Min', v, collections=[])
+            op = tf.Print(op, [v], 'Image Min')
+            tf.add_to_collection(tf.GraphKeys.SUMMARIES, op)
+            v = tf.reduce_max(b_image)
+            op = tf.summary.scalar('Image Max', v, collections=[])
+            op = tf.Print(op, [v], 'Image Max')
             tf.add_to_collection(tf.GraphKeys.SUMMARIES, op)
 
             # Compute TP and FP statistics.
