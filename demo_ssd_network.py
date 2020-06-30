@@ -139,7 +139,7 @@ if __name__ == '__main__':
 
         if FLAGS.save_gt:
             annotation_path = os.path.join(dataset_root, 'Annotations', name.replace('.jpg', '.xml'))
-            _, bboxes, _, labels, _, _ = process_label(annotation_path)
+            _, bboxes, labels, _, _, _ = process_label(annotation_path)
             bboxes = np.array(bboxes)
             labels = np.array(labels)
             scores = np.ones_like(labels, dtype=np.float32)
