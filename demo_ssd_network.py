@@ -126,6 +126,9 @@ if __name__ == '__main__':
     path = FLAGS.dataset_dir
     dataset_root = os.sep.join(path.split(os.sep)[:-1])
     image_names = sorted(os.listdir(path))
+    os.makedirs(os.path.join(FLAGS.eval_dir, 'demo'), exist_ok=True)
+    if FLAGS.save_gt:
+        os.makedirs(os.path.join(FLAGS.eval_dir, 'demo_gt'), exist_ok=True)
     for i, name in enumerate(image_names):
         if i >= FLAGS.max_samples:
             break
