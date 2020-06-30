@@ -66,7 +66,7 @@ tf.app.flags.DEFINE_boolean(
 tf.app.flags.DEFINE_integer(
     'num_classes', 21, 'Number of classes to use in the dataset.')
 tf.app.flags.DEFINE_integer(
-    'batch_size', 4, 'The number of samples in each batch.')
+    'batch_size', 8, 'The number of samples in each batch.')
 tf.app.flags.DEFINE_integer(
     'max_num_batches', None,
     'Max number of batches to evaluate by default use all.')
