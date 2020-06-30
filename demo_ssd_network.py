@@ -14,7 +14,7 @@ tf.app.flags.DEFINE_float(
 tf.app.flags.DEFINE_integer(
     'num_classes', 21, 'Number of classes to use in the dataset.')
 tf.app.flags.DEFINE_integer(
-    'max_samples', 100, 'The maximum number of samples.')
+    'max_samples', 500, 'The maximum number of samples.')
 tf.app.flags.DEFINE_string(
     'dataset_dir', './demo/', 'The directory where the dataset files are stored.')
 tf.app.flags.DEFINE_string(
