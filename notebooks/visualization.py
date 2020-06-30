@@ -14,7 +14,7 @@
 # ==============================================================================
 import cv2
 import random
-
+import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import matplotlib.cm as mpcm
@@ -83,9 +83,28 @@ def bboxes_draw_on_img(img, classes, scores, bboxes, colors, thickness=2):
 # =========================================================================== #
 # Matplotlib show...
 # =========================================================================== #
-def plt_bboxes(img, classes, scores, bboxes, figsize=(10,10), linewidth=1.5):
+def plt_bboxes(img, classes, scores, bboxes, figsize=(10, 10), linewidth=1.5, num_classes=21, savefig_name=None):
     """Visualize bounding boxes. Largely inspired by SSD-MXNET!
     """
+    # Bbox color generation
+    max_color = 1.0
+    code_r = [1, 0, 0, 1, 1, 0, 1, .6, .6]
+    code_g = [0, 1, 0, 1, 0, 1, .6, 1, .6]
+    code_b = [0, 0, 1, 0, 1, 1, .6, .6, 1]
+    code_length = len(code_r)
+    color_base = (num_classes - 1) // code_length + 1
+    color_coeff = max_color / color_base
+
+    class_inds = np.arange(num_classes, dtype=np.float32)
+    reds = (class_inds + code_length - 1) // code_length * color_coeff
+    greens = (class_inds + code_length - 1) // code_length * color_coeff
+    blues = (class_inds + code_length - 1) // code_length * color_coeff
+    for i in range(1, num_classes):
+        idx = (i - 1) % code_length
+        reds[i] = reds[i] * code_r[idx]
+        greens[i] = greens[i] * code_g[idx]
+        blues[i] = blues[i] * code_b[idx]
+
     fig = plt.figure(figsize=figsize)
     plt.imshow(img)
     height = img.shape[0]
@@ -96,7 +115,8 @@ def plt_bboxes(img, classes, scores, bboxes, figsize=(10,10), linewidth=1.5):
         if cls_id >= 0:
             score = scores[i]
             if cls_id not in colors:
-                colors[cls_id] = (random.random(), random.random(), random.random())
+                # colors[cls_id] = (random.random(), random.random(), random.random())
+                colors[cls_id] = (reds[cls_id], greens[cls_id], blues[cls_id])
             ymin = int(bboxes[i, 0] * height)
             xmin = int(bboxes[i, 1] * width)
             ymax = int(bboxes[i, 2] * height)
@@ -111,4 +131,6 @@ def plt_bboxes(img, classes, scores, bboxes, figsize=(10,10), linewidth=1.5):
                            '{:s} | {:.3f}'.format(class_name, score),
                            bbox=dict(facecolor=colors[cls_id], alpha=0.5),
                            fontsize=12, color='white')
+    if savefig_name is not None:
+        fig.savefig(savefig_name, quality=100)
     plt.show()
