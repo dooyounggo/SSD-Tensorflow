@@ -140,6 +140,8 @@ if __name__ == '__main__':
         if FLAGS.save_gt:
             annotation_path = os.path.join(dataset_root, 'Annotations', name.replace('.jpg', '.xml'))
             _, bboxes, _, labels, _, _ = process_label(annotation_path)
+            bboxes = np.array(bboxes)
+            labels = np.array(labels)
             scores = np.ones_like(labels, dtype=np.float32)
             visualization.plt_bboxes(img, labels, scores, bboxes, num_classes=FLAGS.num_classes,
                                      savefig_name=os.path.join(FLAGS.eval_dir, 'demo_gt', f'{i:05d}.jpg'))
