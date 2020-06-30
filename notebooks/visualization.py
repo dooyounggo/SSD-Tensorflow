@@ -133,4 +133,4 @@ def plt_bboxes(img, classes, scores, bboxes, figsize=(10, 10), linewidth=1.5, nu
                            fontsize=12, color='white')
     if savefig_name is not None:
         fig.savefig(savefig_name, quality=100)
-    plt.show()
+    # plt.show()
