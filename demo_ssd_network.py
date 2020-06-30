@@ -2,9 +2,11 @@ import os
 import cv2
 import numpy as np
 import tensorflow as tf
+import xml.etree.ElementTree as emtree
 from nets import ssd_vgg_300, ssd_common, np_methods
 from preprocessing import ssd_vgg_preprocessing
 from notebooks import visualization
+from datasets.pascalvoc_to_tfrecords import VOC_LABELS
 
 
 tf.app.flags.DEFINE_float(
@@ -23,6 +25,8 @@ tf.app.flags.DEFINE_string(
     'checkpoint file.')
 tf.app.flags.DEFINE_string(
     'eval_dir', './logs/', 'Directory where the results are saved to.')
+tf.app.flags.DEFINE_string(
+    'save_gt', False, 'Whether to save ground truth detection results.')
 
 FLAGS = tf.app.flags.FLAGS
 
@@ -43,6 +47,45 @@ def process_image(img, select_threshold=0.5, nms_threshold=.45, net_shape=(300, 
     # Resize bboxes to original image shape. Note: useless for Resize.WARP!
     rbboxes = np_methods.bboxes_resize(rbbox_img, rbboxes)
     return rclasses, rscores, rbboxes
+
+
+def process_label(annotation_path):
+    # Read the XML annotation file.
+    tree = emtree.parse(annotation_path)
+    root = tree.getroot()
+
+    # Image shape.
+    size = root.find('size')
+    shape = [int(size.find('height').text),
+             int(size.find('width').text),
+             int(size.find('depth').text)]
+    # Find annotations.
+    bboxes = []
+    labels = []
+    labels_text = []
+    difficult = []
+    truncated = []
+    for obj in root.findall('object'):
+        label = obj.find('name').text
+        labels.append(int(VOC_LABELS[label][0]))
+        labels_text.append(label.encode('ascii'))
+
+        if obj.find('difficult'):
+            difficult.append(int(obj.find('difficult').text))
+        else:
+            difficult.append(0)
+        if obj.find('truncated'):
+            truncated.append(int(obj.find('truncated').text))
+        else:
+            truncated.append(0)
+
+        bbox = obj.find('bndbox')
+        bboxes.append((float(bbox.find('ymin').text) / shape[0],
+                       float(bbox.find('xmin').text) / shape[1],
+                       float(bbox.find('ymax').text) / shape[0],
+                       float(bbox.find('xmax').text) / shape[1]
+                       ))
+    return shape, bboxes, labels, labels_text, difficult, truncated
 
 
 if __name__ == '__main__':
@@ -81,6 +124,7 @@ if __name__ == '__main__':
 
     # Test on some demo image and visualize output.
     path = FLAGS.dataset_dir
+    dataset_root = os.sep.join(path.split(os.sep)[:-1])
     image_names = sorted(os.listdir(path))
     for i, name in enumerate(image_names):
         if i >= FLAGS.max_samples:
@@ -92,3 +136,10 @@ if __name__ == '__main__':
                                                    nms_threshold=FLAGS.nms_threshold)
         visualization.plt_bboxes(img, rclasses, rscores, rbboxes, num_classes=FLAGS.num_classes,
                                  savefig_name=os.path.join(FLAGS.eval_dir, 'demo', f'{i:05d}.jpg'))
+
+        if FLAGS.save_gt:
+            annotation_path = os.path.join(dataset_root, 'Annotations', name.replace('.jpg', '.xml'))
+            _, bboxes, _, labels, _, _ = process_label(annotation_path)
+            scores = np.ones_like(labels, dtype=np.float32)
+            visualization.plt_bboxes(img, labels, scores, bboxes, num_classes=FLAGS.num_classes,
+                                     savefig_name=os.path.join(FLAGS.eval_dir, 'demo_gt', f'{i:05d}.jpg'))
