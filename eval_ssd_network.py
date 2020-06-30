@@ -46,9 +46,9 @@ DATA_FORMAT = 'NHWC'
 tf.app.flags.DEFINE_float(
     'select_threshold', 0.05, 'Selection threshold.')
 tf.app.flags.DEFINE_integer(
-    'select_top_k', 100, 'Select top-k detected bounding boxes.')
+    'select_top_k', 400, 'Select top-k detected bounding boxes.')
 tf.app.flags.DEFINE_integer(
-    'keep_top_k', 50, 'Keep top-k detected objects.')
+    'keep_top_k', 200, 'Keep top-k detected objects.')
 tf.app.flags.DEFINE_float(
     'nms_threshold', 0.45, 'Non-Maximum Selection threshold.')
 tf.app.flags.DEFINE_float(
