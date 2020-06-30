@@ -19,7 +19,7 @@ CHECKPOINT_PATH="./checkpoints/VGG_VOC0712_SSD_300x300_ft_iter_120000.ckpt"
 
 echo "Dataset: ${DATASET_DIR}, log: ${EVAL_DIR}, ckpt: ${CHECKPOINT_PATH}"
 mkdir -p "${EVAL_DIR}/demo"
-rm -rf "${EVAL_DIR}/demo/*"
+rm -rf "${EVAL_DIR}/demo/"*
 
 python demo_ssd_network.py \
     --eval_dir="${EVAL_DIR}" \
