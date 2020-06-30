@@ -85,6 +85,8 @@ if __name__ == '__main__':
     for i, name in enumerate(image_names):
         if i >= FLAGS.max_samples:
             break
+        if i % 30 == 0:
+            print('Evaluating images... {:05d}/{}'.format(i, min(len(image_names), FLAGS.max_samples)))
         img = cv2.cvtColor(cv2.imread(os.path.join(path, name)), cv2.COLOR_BGR2RGB)
         rclasses, rscores, rbboxes = process_image(img, select_threshold=FLAGS.select_threshold,
                                                    nms_threshold=FLAGS.nms_threshold)
