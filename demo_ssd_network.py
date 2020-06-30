@@ -25,7 +25,7 @@ tf.app.flags.DEFINE_string(
     'checkpoint file.')
 tf.app.flags.DEFINE_string(
     'eval_dir', './logs/', 'Directory where the results are saved to.')
-tf.app.flags.DEFINE_string(
+tf.app.flags.DEFINE_boolean(
     'save_gt', False, 'Whether to save ground truth detection results.')
 
 FLAGS = tf.app.flags.FLAGS
