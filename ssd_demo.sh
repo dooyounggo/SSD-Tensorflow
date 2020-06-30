@@ -3,7 +3,7 @@
 echo "Enter subdirectory name:"
 read -r input
 
-if [ -n "${DATASET_ROOT}" ]
+if [ -z "${DATASET_ROOT}" ]
 then
   DATASET_ROOT="${HOME}/Projects/datasets"
 fi
