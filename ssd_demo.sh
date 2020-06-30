@@ -3,7 +3,17 @@
 echo "Enter subdirectory name:"
 read -r input
 
-DATASET_DIR="./tfrecords/${input}"
+if [ -n "${DATASET_ROOT}" ]
+then
+  DATASET_ROOT="${HOME}/Projects/datasets"
+fi
+
+if [ -n "${input}" ]
+then
+    DATASET_DIR="${DATASET_ROOT}/VOC2007_${input}"
+else
+    DATASET_DIR="${DATASET_ROOT}/VOC2007"
+fi
 EVAL_DIR="./logs/${input}"
 CHECKPOINT_PATH="./checkpoints/VGG_VOC0712_SSD_300x300_ft_iter_120000.ckpt"
 
