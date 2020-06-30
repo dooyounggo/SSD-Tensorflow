@@ -10,15 +10,15 @@ fi
 
 if [ -n "${input}" ]
 then
-    DATASET_DIR="${DATASET_ROOT}/VOC2007_${input}"
+    DATASET_DIR="${DATASET_ROOT}/VOC2007_${input}/JPEGImages"
 else
-    DATASET_DIR="${DATASET_ROOT}/VOC2007"
+    DATASET_DIR="${DATASET_ROOT}/VOC2007/JPEGImages"
 fi
 EVAL_DIR="./logs/${input}"
 CHECKPOINT_PATH="./checkpoints/VGG_VOC0712_SSD_300x300_ft_iter_120000.ckpt"
 
 echo "Dataset: ${DATASET_DIR}, log: ${EVAL_DIR}, ckpt: ${CHECKPOINT_PATH}"
-mkdir -p "${EVAL_DIR}"
+mkdir -p "${EVAL_DIR}/demo"
 rm -rf "${EVAL_DIR}/demo/*"
 
 python demo_ssd_network.py \
