@@ -8,7 +8,7 @@ from notebooks import visualization
 
 
 tf.app.flags.DEFINE_float(
-    'select_threshold', 0.3, 'Selection threshold.')
+    'select_threshold', 0.25, 'Selection threshold.')
 tf.app.flags.DEFINE_float(
     'nms_threshold', 0.45, 'Non-Maximum Selection threshold.')
 tf.app.flags.DEFINE_integer(
